@@ -1,0 +1,614 @@
+{
+  "metadata": {
+    "version": "gdpr_v1"
+  },
+  "zaps": [
+    {
+      "id": 380393551,
+      "title": "Lead Capture & CRM Automation",
+      "status": "on",
+      "nodes": {
+        "380393551": {
+          "id": 380393551,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": false,
+          "type_of": "read",
+          "params": {
+            "formId": "YOUR_GOOGLE_FORM_ID"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {
+              "formId": "Contact Us – Get a Free Consultation"
+            }
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": null,
+          "root_id": null,
+          "action": "new_form_response",
+          "selected_api": "GoogleFormsCLIAPI@1.1.1",
+          "title": "Lead Capture & CRM Automation",
+          "authentication_id": "REDACTED",
+          "created_at": "2026-09-17T00:03:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380548943": {
+          "id": 380548943,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "write",
+          "params": {
+            "transform": "string.titlecase",
+            "inputs": "{{=gives[\"380393551\"][\"541ff460\"]}}"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {
+              "transform": "Titlecase"
+            },
+            "stepTitle": "Format Name (Title Case)"
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380393551,
+          "root_id": 380393551,
+          "action": "text_line_item",
+          "selected_api": "ZapierFormatterCLIAPI@1.0.8",
+          "title": null,
+          "authentication_id": null,
+          "created_at": "2026-09-18T01:27:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380548944": {
+          "id": 380548944,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "write",
+          "params": {
+            "transform": "string.split",
+            "inputs": "{{=gives[\"380393551\"][\"4f3a393f\"]}}",
+            "separator": "@",
+            "index": "-1"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {
+              "transform": "Split Text"
+            },
+            "stepTitle": "Extract Email Domain"
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380548943,
+          "root_id": 380393551,
+          "action": "text_line_item",
+          "selected_api": "ZapierFormatterCLIAPI@1.0.8",
+          "title": null,
+          "authentication_id": null,
+          "created_at": "2026-09-18T01:27:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380548945": {
+          "id": 380548945,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "search",
+          "params": {
+            "row_count": "10",
+            "_zap_search_success_on_miss": true,
+            "_zap_search_multiple_results": "first",
+            "drive": "",
+            "spreadsheet": "YOUR_SPREADSHEET_ID",
+            "worksheet": "1534879702",
+            "lookup_key": "COL$C",
+            "lookup_value": "{{=gives[\"380393551\"][\"4f3a393f\"]}}"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {
+              "drive": "My Google Drive",
+              "spreadsheet": "Lead CRM Tracker",
+              "worksheet": "CRM",
+              "lookup_key": "Email"
+            }
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380548944,
+          "root_id": 380393551,
+          "action": "lookup_row",
+          "selected_api": "GoogleSheetsV2CLIAPI@2.17.0",
+          "title": null,
+          "authentication_id": "REDACTED",
+          "created_at": "2026-09-18T01:27:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380672971": {
+          "id": 380672971,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "write",
+          "params": {
+            "transform": "util.lookup",
+            "inputs": "{{=gives[\"380548945\"][\"_zap_search_was_found_status\"]}}",
+            "table": {
+              "True": "Returning Lead - New Inquiry",
+              "False": "New Lead"
+            },
+            "fallback": "New Lead"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {
+              "transform": "Lookup Table"
+            },
+            "stepTitle": "Determine Lead Status"
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380548945,
+          "root_id": 380393551,
+          "action": "util_line_item",
+          "selected_api": "ZapierFormatterCLIAPI@1.0.8",
+          "title": "Determine Lead Status",
+          "authentication_id": null,
+          "created_at": "2026-09-19T00:40:42+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380393900": {
+          "id": 380393900,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "write",
+          "params": {
+            "timezone": true,
+            "drive": "",
+            "spreadsheet": "YOUR_SPREADSHEET_ID",
+            "worksheet": "1534879702",
+            "COL$A": "{{=gives[\"380393551\"][\"lastSubmittedTime\"]}}",
+            "COL$B": "{{=gives['380548943'][\"output\"]}}",
+            "COL$C": "{{=gives[\"380393551\"][\"4f3a393f\"]}}",
+            "COL$D": "{{=gives[\"380393551\"][\"5c35a1e8\"]}}",
+            "COL$E": "{{=gives[\"380393551\"][\"48ea69c0\"]}}",
+            "COL$G": "{{=gives['380548944'][\"output\"]}}",
+            "COL$H": "{{=gives['380672971'][\"output\"]}}"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {
+              "drive": "My Google Drive",
+              "spreadsheet": "Lead CRM Tracker",
+              "worksheet": "CRM"
+            }
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380672971,
+          "root_id": 380393551,
+          "action": "add_row",
+          "selected_api": "GoogleSheetsV2CLIAPI@2.17.0",
+          "title": null,
+          "authentication_id": "REDACTED",
+          "created_at": "2026-09-17T00:10:04+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380394990": {
+          "id": 380394990,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "write",
+          "params": {
+            "body_type": "html",
+            "render_signature_in_html": false,
+            "signature_delimiter": true,
+            "send_to_groups": false,
+            "to": [
+              "{{=gives[\"380393551\"][\"4f3a393f\"]}}"
+            ],
+            "subject": "Thank you for reaching out!",
+            "body": "      <p>Hi <strong>{{=gives['380548943'][\"output\"]}}</strong>,</p>\r\n\r\n   <p>Thanks for reaching out! We've received your message and one of our team members will get back to you within 24 hours.</p>\r\n\r\n   <p>Best regards,<br>\r\n   The Team</p>"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {}
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380393900,
+          "root_id": 380393551,
+          "action": "message",
+          "selected_api": "GoogleMailV2CLIAPI@2.14.0",
+          "title": null,
+          "authentication_id": "REDACTED",
+          "created_at": "2026-09-17T00:32:07+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380395520": {
+          "id": 380395520,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "write",
+          "params": {},
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            }
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380394990,
+          "root_id": 380393551,
+          "action": "branch",
+          "selected_api": "BranchingAPI",
+          "title": null,
+          "authentication_id": null,
+          "created_at": "2026-09-17T00:41:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380395521": {
+          "id": 380395521,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "filter",
+          "params": {
+            "color": "Heroine Blue",
+            "emoji": "A",
+            "path_eval_index": 0,
+            "filter_criteria": [
+              {
+                "id": 8053102394355361,
+                "group": 4998161521105156,
+                "key": "{{=gives[\"380393551\"][\"48ea69c0\"]}}",
+                "value": "High",
+                "match": "iexact",
+                "action": "continue"
+              }
+            ]
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "stepTitle": "High Priority Lead"
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380395520,
+          "root_id": 380393551,
+          "action": "filter",
+          "selected_api": "BranchingAPI",
+          "title": "Path A",
+          "authentication_id": null,
+          "created_at": "2026-09-17T00:41:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380395523": {
+          "id": 380395523,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "filter",
+          "params": {
+            "color": "Peru",
+            "emoji": "B",
+            "path_eval_index": 1,
+            "path_eval_stage": 9,
+            "filter_criteria": [
+              {
+                "id": 2214017004590702,
+                "group": 6519181378538983,
+                "key": "",
+                "value": "",
+                "action": "continue"
+              }
+            ],
+            "formerTitle": "Standard Lead",
+            "isAlwaysRun": false
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "stepTitle": "Fallback"
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380395520,
+          "root_id": 380393551,
+          "action": "filter",
+          "selected_api": "BranchingAPI",
+          "title": "Path B",
+          "authentication_id": null,
+          "created_at": "2026-09-17T00:41:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380395524": {
+          "id": 380395524,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "write",
+          "params": {
+            "drive": "",
+            "spreadsheet": "YOUR_SPREADSHEET_ID",
+            "worksheet": "1534879702",
+            "COL$A": "",
+            "COL$F": "   Standard - Follow Up Later",
+            "row_number": "{{=gives['380393900'][\"row\"]}}"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {
+              "drive": "My Google Drive",
+              "spreadsheet": "Lead CRM Tracker",
+              "worksheet": "CRM"
+            }
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380395523,
+          "root_id": 380393551,
+          "action": "update_row_lines",
+          "selected_api": "GoogleSheetsV2CLIAPI@2.17.0",
+          "title": null,
+          "authentication_id": "REDACTED",
+          "created_at": "2026-09-17T00:41:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380395522": {
+          "id": 380395522,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "write",
+          "params": {
+            "add_app_to_channel": true,
+            "as_bot": true,
+            "add_edit_link": true,
+            "unfurl": true,
+            "link_names": true,
+            "reply_broadcast": false,
+            "channel": "YOUR_SLACK_CHANNEL_ID",
+            "text": "     🔥 High Priority Lead!\r\n     Name: {{=gives['380548943'][\"output\"]}}\r\n     Email: {{=gives[\"380393551\"][\"4f3a393f\"]}}\r\n     Message: {{=gives[\"380393551\"][\"5c35a1e8\"]}}\r\n\r\n     Follow up immediately!"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {
+              "channel": "new-leads"
+            }
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380395521,
+          "root_id": 380393551,
+          "action": "channel_message",
+          "selected_api": "SlackCLIAPI@1.43.0",
+          "title": null,
+          "authentication_id": "REDACTED",
+          "created_at": "2026-09-17T00:41:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380548947": {
+          "id": 380548947,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "write",
+          "params": {
+            "transform": "date.manipulate",
+            "inputs": "{{=gives[\"380393551\"][\"lastSubmittedTime\"]}}",
+            "expression": "   +1 day",
+            "to_format": "YYYY-MM-DDTHH:mm:ssZ"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {
+              "transform": "Add/Subtract Time"
+            },
+            "stepTitle": "Calculate Follow-up Start Time"
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380395522,
+          "root_id": 380393551,
+          "action": "datetime_line_item",
+          "selected_api": "ZapierFormatterCLIAPI@1.0.8",
+          "title": "Calculate Follow-up Start Time",
+          "authentication_id": null,
+          "created_at": "2026-09-18T01:27:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380548948": {
+          "id": 380548948,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "write",
+          "params": {
+            "transform": "date.manipulate",
+            "inputs": "{{=gives['380548947'][\"output\"]}}",
+            "expression": "   +30 minutes",
+            "to_format": "YYYY-MM-DDTHH:mm:ssZ"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {
+              "transform": "Add/Subtract Time"
+            },
+            "stepTitle": "Calculate Follow-up End Time"
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380548947,
+          "root_id": 380393551,
+          "action": "datetime_line_item",
+          "selected_api": "ZapierFormatterCLIAPI@1.0.8",
+          "title": "Calculate Follow-up End Time",
+          "authentication_id": null,
+          "created_at": "2026-09-18T01:27:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        },
+        "380548949": {
+          "id": 380548949,
+          "account_id": "REDACTED",
+          "customuser_id": "REDACTED",
+          "paused": true,
+          "type_of": "write",
+          "params": {
+            "conferencing": false,
+            "all_day": false,
+            "useCustomColor": false,
+            "visibility": "default",
+            "reminders__useDefault": true,
+            "eventType": "default",
+            "calendarid": "your-email@example.com",
+            "summary": "     Follow up with {{=gives['380548943'][\"output\"]}}",
+            "description": "     Lead: {{=gives['380548943'][\"output\"]}}\r\n     Email: {{=gives[\"380393551\"][\"4f3a393f\"]}}\r\n     Message: {{=gives[\"380393551\"][\"5c35a1e8\"]}}\r\n\r\n     Follow up on this high-priority inquiry.",
+            "start__dateTime": "{{=gives['380548947'][\"output\"]}}",
+            "end__dateTime": "{{=gives['380548948'][\"output\"]}}"
+          },
+          "meta": {
+            "$editor": {
+              "has_automatic_issues": false
+            },
+            "parammap": {
+              "calendarid": "your-email@example.com"
+            }
+          },
+          "triple_stores": {
+            "copied_from": null,
+            "created_by": null,
+            "polling_interval_override": 0,
+            "block_and_release_limit_override": 0,
+            "spread_tasks": 1
+          },
+          "folders": null,
+          "parent_id": 380548948,
+          "root_id": 380393551,
+          "action": "detailed_event",
+          "selected_api": "GoogleCalendarCLIAPI@1.16.0",
+          "title": null,
+          "authentication_id": "REDACTED",
+          "created_at": "2026-09-18T01:27:25+00:00",
+          "last_changed": "2026-09-19T00:40:42+00:00"
+        }
+      }
+    }
+  ]
+}
